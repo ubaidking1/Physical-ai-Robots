@@ -1,0 +1,160 @@
+/* Section Background */
+.sliderSection {
+  padding: 4rem 2rem;
+  background-color: #28abde; /* skyblue */
+}
+
+.sliderSection h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  font-weight: 80;
+  color: #0f172a;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Grid Layout */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(22px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+}
+
+/* Chapter Card */
+.card {
+  width: 20px;
+  height: 10px;
+  background: linear-gradient(135deg, #ffffff, #e0faff);
+  border-radius: 1.5rem;
+  text-decoration: none;
+  color: #0f172a;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Chapter Number Circle */
+.cardNumber {
+  width: 50px;
+  height: 10px;
+  background: #0f172a;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.3rem;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* Chapter Title */
+.cardTitle {
+  text-align: center;
+  font-size: 1.1rem;
+  padding: 0 0.5rem;
+}
+
+/* Hover Effect */
+.card:hover {
+  transform: translateY(-8px) scale(1.07);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+  background: linear-gradient(135deg, #ffffff, #c0e8ff);
+}
+
+/* Responsive for Mobile */
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+.sliderSection {
+  padding: 3rem 2rem;
+  background-color: #87ceeb;
+}
+
+.slider {
+  display: flex;
+  gap: 2rem;
+  overflow-x: auto;
+}
+
+.card {
+  min-width: 250px;
+  min-height: 150px;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.card:hover {
+  transform: translateY(-8px) scale(1.05);
+}
+/* ------------------ SLIDER SECTION ------------------ */
+
+.sliderSection {
+  padding: 3rem 2rem;
+  background: #87ceeb;
+}
+
+.sliderSection h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* Horizontal Slider */
+.slider {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 1rem;
+}
+
+.slider::-webkit-scrollbar {
+  height: 8px;
+}
+
+.slider::-webkit-scrollbar-thumb {
+  background: #0f172a;
+  border-radius: 4px;
+}
+
+/* Chapter Card */
+.card {
+  min-width: 250px;
+  min-height: 150px;
+  background: white;
+  color: #0f172a;
+  padding: 1.5rem 1rem;
+  border-radius: 1.3rem;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  transition: 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+
+/* Dark Mode */
+html[data-theme='dark'] .card {
+  background: #1f2937;
+  border: 1px solid #374151;
+  color: #fff;
+}
