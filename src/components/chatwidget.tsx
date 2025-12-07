@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import styles from "./ChatWidget.module.css";
 
 const ChatWidget: React.FC = () => {
   const [open, setOpen] = useState(false);
