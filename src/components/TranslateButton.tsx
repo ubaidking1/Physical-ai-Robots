@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { OpenAI } from 'openai';
 
 interface TranslateButtonProps {
   chapterText: string; // Current chapter content
   onTranslate: (translatedText: string, isRTL: boolean) => void; // Callback to update chapter
+}
+
+interface TranslationResponse {
+  translated: string;
 }
 
 export default function TranslateButton({ chapterText, onTranslate }: TranslateButtonProps) {
@@ -20,24 +23,14 @@ export default function TranslateButton({ chapterText, onTranslate }: TranslateB
 
     setLoading(true);
     try {
-      // Call OpenAI GPT for translation
-      const client = new OpenAI({
-        apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY || '', // Your API key
+      const res = await fetch("http://127.0.0.1:8000/api/translate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: chapterText }),
       });
 
-      const response = await client.chat.completions.create({
-        model: 'gpt-5-mini',
-        messages: [
-          {
-            role: 'user',
-            content: `Translate the following text into Urdu while preserving technical terms like "Physical AI", "ROS 2", and keep code blocks intact. Return in plain text:\n\n${chapterText}`
-          }
-        ],
-        temperature: 0
-      });
-
-      const urduText = response.choices[0].message.content;
-      onTranslate(urduText, true); // Update parent content
+      const data: TranslationResponse = await res.json();
+      onTranslate(data.translated, true); // Update parent content
       setTranslated(true);
 
     } catch (err) {
@@ -50,10 +43,8 @@ export default function TranslateButton({ chapterText, onTranslate }: TranslateB
 
   return (
     <button
-      className="translate-button"
+      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
       onClick={handleTranslate}
-      aria-label="Translate chapter to Urdu"
-      title="Translate this chapter to Urdu"
       disabled={loading}
     >
       {loading ? 'Translating...' : translated ? 'Show English' : 'Translate to Urdu'}

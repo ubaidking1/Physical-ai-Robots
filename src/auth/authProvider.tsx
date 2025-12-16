@@ -1,5 +1,11 @@
-import React, { createContext, useContext, ReactNode, useState } from 'react';
-import { auth } from './betterauth';
+import React, {
+  createContext,
+  useContext,
+  ReactNode,
+  useState,
+  useEffect,
+} from 'react';
+import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 
 type User = {
   id: string;
@@ -17,22 +23,34 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [authClient, setAuthClient] = useState<any>(null);
+
+  // ✅ Load betterauth ONLY in browser
+  useEffect(() => {
+    if (!ExecutionEnvironment.canUseDOM) return;
+
+    import('./betterauth').then((mod) => {
+      setAuthClient(mod.auth);
+    });
+  }, []);
 
   const signUp = async (data: { email: string; password: string }) => {
-    const result = await auth.signUp(data);
+    if (!authClient) throw new Error('Auth not ready');
+    const result = await authClient.signUp(data);
     setCurrentUser(result.user);
     return result.user;
   };
 
   const signIn = async (data: { email: string; password: string }) => {
-    const user = await auth.signIn(data);
+    if (!authClient) throw new Error('Auth not ready');
+    const user = await authClient.signIn(data);
     setCurrentUser(user);
     return user;
   };
 
   const signOut = () => {
     setCurrentUser(null);
-    // Add auth.signOut() if your library supports it
+    authClient?.signOut?.();
   };
 
   const value: AuthContextType = {
@@ -45,9 +63,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-// Hook to access auth
+// Hook
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within an AuthProvider');
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
   return context;
 };

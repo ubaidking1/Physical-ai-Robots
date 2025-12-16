@@ -1,0 +1,240 @@
+﻿import RAGChat from '@site/src/components/RAGChat';
+
+# Physical AI & Humanoid Robotics
+
+This chapter introduces embodied intelligence.
+
+<RAGChat />
+
+# Chapter 6 — Capstone Project
+
+## 6.1 Project Overview
+- Integrate all prior chapters
+- Build full AI-robot pipeline
+- Simulation → AI → Actuation
+
+## 6.2 Robot Pipeline
+- Sensor input
+- AI planning
+- Motion execution
+
+## 6.3 ROS 2 Node Structure
+- Nodes for perception, planning, action
+- Multi-node coordination
+- Logging and debugging
+
+## 6.4 Vision + LLM Control
+- Real-time instruction parsing
+- Image-based action decisions
+- Feedback loops
+
+## 6.5 Task Example
+- Pick & place objects
+- Navigation in simulated environment
+- Performance metrics
+
+## 6.6 Deployment & Demo
+- Testing on simulation
+- Real robot deployment
+- Optimization & tuning
+
+
+
+Robot Kinematics and Dynamics
+Robot kinematics and dynamics are fundamental concepts in robotics, crucial for understanding how a robot moves, how its joints relate to its end-effector position, and how forces and torques influence its motion. This chapter will delve into both forward and inverse kinematics, as well as the basics of robot dynamics.
+
+3.1 Forward Kinematics
+Forward kinematics deals with calculating the position and orientation of the robot's end-effector (e.g., a gripper or tool) given the values of its joint variables (e.g., joint angles for revolute joints or displacements for prismatic joints).
+
+3.1.1 Denavit-Hartenberg (D-H) Parameters
+The Denavit-Hartenberg convention is a widely used method for establishing a coordinate system for each link of a robot manipulator. It simplifies the process of deriving the kinematic equations by providing a systematic way to assign link frames.
+
+Link Parameters: Each link is described by four parameters:
+a: The length of the common normal between 
+Z
+i
+Zi​ and 
+Z
+i
+−
+1
+Zi−1​.
+\alpha: The twist angle (rotation) about the common normal to bring 
+Z
+i
+−
+1
+Zi−1​ parallel to 
+Z
+i
+Zi​.
+d: The offset along 
+Z
+i
+−
+1
+Zi−1​ from the common normal to 
+Z
+i
+Zi​.
+\theta: The joint angle about 
+Z
+i
+−
+1
+Zi−1​ to bring 
+X
+i
+−
+1
+Xi−1​ parallel to 
+X
+i
+Xi​.
+3.1.2 Homogeneous Transformation Matrices
+Each D-H parameter set allows for the derivation of a homogeneous transformation matrix 
+A
+i
+i
+−
+1
+Aii−1​ that transforms coordinates from frame 
+i
+i to frame 
+i
+−
+1
+i−1. The overall transformation from the end-effector frame to the base frame is then a product of these individual transformations:
+
+T
+n
+0
+=
+A
+1
+0
+A
+2
+1
+⋯
+A
+n
+n
+−
+1
+Tn0​=A10​A21​⋯Ann−1​
+
+3.2 Inverse Kinematics
+Inverse kinematics is the inverse problem of forward kinematics: given the desired position and orientation of the end-effector, calculate the required joint variables. This is a more complex problem, often involving non-linear equations, and may have multiple solutions, no solutions, or singular configurations.
+
+3.2.1 Analytical Solutions
+For simpler robot configurations (e.g., 2R, 3R manipulators), analytical solutions can be derived using geometric or algebraic methods. These solutions are generally faster and provide all possible solutions.
+
+3.2.2 Numerical Solutions
+For complex manipulators, numerical methods are often necessary. These methods typically involve iterative algorithms that use the Jacobian matrix to search for a solution that minimizes the error between the desired and current end-effector pose.
+
+Jacobian Pseudoinverse: A common approach for small changes in position. 
+q
+˙
+=
+J
+†
+v
+e
+e
+q˙​=J†vee​
+Optimization-based Methods: Formulate inverse kinematics as an optimization problem, minimizing a cost function that represents the pose error.
+3.3 Robot Dynamics
+Robot dynamics deals with the relationship between the forces and torques applied to a robot and the resulting motion. This is crucial for control, trajectory planning, and simulating robot behavior.
+
+3.3.1 Lagrangian Dynamics
+The Lagrangian formulation is an energy-based approach to deriving the equations of motion for a robot. It involves calculating the kinetic energy (
+K
+K) and potential energy (
+P
+P) of the system, and then applying the Euler-Lagrange equations:
+
+d
+d
+t
+(
+∂
+L
+∂
+q
+˙
+)
+−
+∂
+L
+∂
+q
+=
+τ
+dtd​(∂q˙​∂L​)−∂q∂L​=τ
+
+where 
+L
+=
+K
+−
+P
+L=K−P is the Lagrangian, 
+q
+q are the generalized coordinates (joint variables), and 
+τ
+τ are the generalized forces/torques (joint torques).
+
+3.3.2 Newton-Euler Dynamics
+The Newton-Euler formulation is a recursive approach that propagates forces and velocities from the base to the end-effector (forward recursion) and then propagates forces and torques from the end-effector back to the base (backward recursion). This method is often preferred for its computational efficiency, especially for real-time control.
+
+3.3.3 Equations of Motion
+The general form of the robot's dynamic equations of motion can be expressed as:
+
+M
+(
+q
+)
+q
+¨
++
+C
+(
+q
+,
+q
+˙
+)
+q
+˙
++
+G
+(
+q
+)
+=
+τ
+M(q)q¨​+C(q,q˙​)q˙​+G(q)=τ
+
+M
+(
+q
+)
+M(q): The mass matrix (or inertia matrix), which is configuration-dependent.
+C
+(
+q
+,
+q
+˙
+)
+C(q,q˙​): The Coriolis and centripetal forces matrix.
+G
+(
+q
+)
+G(q): The gravity forces vector.
+τ
+τ: The vector of joint torques.
+Conclusion
+Robot kinematics and dynamics provide the mathematical framework for describing and predicting robot motion. Forward kinematics allows us to determine the end-effector's pose from joint variables, while inverse kinematics solves the reverse problem. Robot dynamics relates forces and torques to motion, essential for designing effective control strategies. A solid understanding of these concepts is fundamental for developing sophisticated Physical AI and humanoid robotic systems. The next chapters will build upon these foundations to explore topics such as trajectory generation and control systems.
