@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-// Mock API function to simulate a chatbot response
-const getBotResponse = (message: string): Promise<{ text: string }> => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve({ text: `You said: "${message}". This is a mock response.` });
-    }, 500);
-  });
-};
-
 const ChatWidget = (): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<{ text: string; sender: 'user' | 'bot' }[]>([]);
@@ -17,7 +8,7 @@ const ChatWidget = (): JSX.Element => {
 
   useEffect(() => {
     if (isOpen) {
-      setMessages([{ text: "Hello! I'm a friendly chatbot. How can I help you?", sender: 'bot' }]);
+      setMessages([{ text: "Hello! I'm a friendly RAG chatbot. How can I help you?", sender: 'bot' }]);
     }
   }, [isOpen]);
 
@@ -39,11 +30,24 @@ const ChatWidget = (): JSX.Element => {
     setIsLoading(true);
 
     try {
-      const botResponse = await getBotResponse(inputValue);
-      const botMessage = { text: botResponse.text, sender: 'bot' as const };
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: inputValue }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const botMessage = { text: data.reply, sender: 'bot' as const };
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
-      const errorMessage = { text: 'Sorry, something went wrong.', sender: 'bot' as const };
+      console.error("Error calling RAG backend:", error);
+      const errorMessage = { text: 'Sorry, I could not get a response from the chatbot.', sender: 'bot' as const };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
